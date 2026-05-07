@@ -1,0 +1,279 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+
+.app { max-width: 380px; margin: 0 auto; padding: 16px; }
+
+.header { text-align: center; padding: 20px 0 16px; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 20px; }
+.header h1 { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+.header p { font-size: 13px; color: var(--color-text-secondary); margin-top: 4px; }
+
+.gauge-wrap { display: flex; justify-content: center; margin: 0 0 20px; }
+.gauge-outer { position: relative; width: 180px; height: 100px; overflow: hidden; }
+.gauge-bg { width: 180px; height: 180px; border-radius: 50%; background: conic-gradient(from 180deg, #E1F5EE 0deg, #E1F5EE 180deg, transparent 180deg); position: absolute; top: 0; }
+.gauge-fill { width: 180px; height: 180px; border-radius: 50%; position: absolute; top: 0; transition: background 0.6s ease; }
+.gauge-inner { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 60px; background: var(--color-background-primary); border-radius: 0 0 60px 60px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 6px; }
+.bac-value { font-size: 26px; font-weight: 500; color: var(--color-text-primary); line-height: 1; }
+.bac-unit { font-size: 11px; color: var(--color-text-secondary); }
+
+.status-badge { text-align: center; margin-bottom: 20px; }
+.badge { display: inline-block; padding: 5px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+
+.section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+
+.profile-card { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 14px; margin-bottom: 16px; }
+.sex-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.sex-btn { padding: 9px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); color: var(--color-text-primary); font-size: 14px; cursor: pointer; transition: all 0.15s; }
+.sex-btn.active { background: #185FA5; border-color: #185FA5; color: #fff; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.field label { font-size: 12px; color: var(--color-text-secondary); display: block; margin-bottom: 4px; }
+.field input { width: 100%; padding: 8px 10px; font-size: 15px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); color: var(--color-text-primary); }
+
+.drink-card { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 14px; margin-bottom: 16px; }
+.drink-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.add-btn { width: 100%; padding: 11px; border-radius: var(--border-radius-md); border: 0.5px solid #185FA5; background: #185FA5; color: #fff; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.15s; }
+.add-btn:active { opacity: 0.8; }
+
+.log-card { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 14px; margin-bottom: 16px; }
+.log-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.log-item:last-child { border-bottom: none; }
+.log-info { font-size: 14px; color: var(--color-text-primary); }
+.log-time { font-size: 12px; color: var(--color-text-secondary); }
+.log-del { background: none; border: none; color: var(--color-text-secondary); cursor: pointer; font-size: 18px; padding: 0 4px; }
+
+.sober-info { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 14px; margin-bottom: 16px; display: flex; justify-content: space-between; }
+.info-block { text-align: center; flex: 1; }
+.info-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 2px; }
+.info-value { font-size: 16px; font-weight: 500; color: var(--color-text-primary); }
+
+.clear-btn { width: 100%; padding: 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); color: var(--color-text-secondary); font-size: 14px; cursor: pointer; margin-bottom: 20px; }
+
+.empty-log { text-align: center; padding: 12px 0; font-size: 13px; color: var(--color-text-secondary); }
+</style>
+
+<div class="app">
+  <h2 class="sr-only">Calculateur d'alcoolémie en temps réel</h2>
+
+  <div class="header">
+    <h1>🍷 Alcoolémie</h1>
+    <p>Calculateur en temps réel</p>
+  </div>
+
+  <div class="gauge-wrap">
+    <div class="gauge-outer">
+      <div class="gauge-bg"></div>
+      <div class="gauge-fill" id="gaugeFill"></div>
+      <div class="gauge-inner">
+        <div class="bac-value" id="bacDisplay">0.00</div>
+        <div class="bac-unit">g/L</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-badge">
+    <span class="badge" id="statusBadge" style="background:#EAF3DE;color:#3B6D11;">Sobre</span>
+  </div>
+
+  <div class="section-title">Votre profil</div>
+  <div class="profile-card">
+    <div class="sex-grid">
+      <button class="sex-btn active" id="btnH" onclick="setSex('H')">♂ Homme</button>
+      <button class="sex-btn" id="btnF" onclick="setSex('F')">♀ Femme</button>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Poids (kg)</label>
+        <input type="number" id="weight" value="75" min="30" max="200" oninput="update()">
+      </div>
+      <div class="field">
+        <label>Taille (cm)</label>
+        <input type="number" id="height" value="175" min="100" max="220" oninput="update()">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Ajouter une boisson</div>
+  <div class="drink-card">
+    <div class="drink-row">
+      <div class="field">
+        <label>Degré (%)</label>
+        <input type="number" id="degree" value="5" min="0.1" max="100" step="0.5">
+      </div>
+      <div class="field">
+        <label>Volume (mL)</label>
+        <input type="number" id="volume" value="250" min="1" max="2000">
+      </div>
+    </div>
+    <button class="add-btn" onclick="addDrink()">
+      <i class="ti ti-plus" aria-hidden="true"></i> Ajouter cette boisson
+    </button>
+  </div>
+
+  <div id="logSection" style="display:none">
+    <div class="section-title">Consommation</div>
+    <div class="log-card" id="logList"></div>
+  </div>
+
+  <div class="sober-info">
+    <div class="info-block">
+      <div class="info-label">Pic estimé</div>
+      <div class="info-value" id="peakBac">—</div>
+    </div>
+    <div class="info-block" style="border-left:0.5px solid var(--color-border-tertiary)">
+      <div class="info-label">Sobre dans</div>
+      <div class="info-value" id="soberIn">—</div>
+    </div>
+    <div class="info-block" style="border-left:0.5px solid var(--color-border-tertiary)">
+      <div class="info-label">Conduite OK</div>
+      <div class="info-value" id="driveIn">—</div>
+    </div>
+  </div>
+
+  <button class="clear-btn" onclick="clearAll()">
+    <i class="ti ti-trash" aria-hidden="true"></i> Tout effacer
+  </button>
+</div>
+
+<script>
+let sex = 'H';
+let drinks = [];
+let tickInterval = null;
+
+function setSex(s) {
+  sex = s;
+  document.getElementById('btnH').classList.toggle('active', s==='H');
+  document.getElementById('btnF').classList.toggle('active', s==='F');
+  update();
+}
+
+function addDrink() {
+  const deg = parseFloat(document.getElementById('degree').value);
+  const vol = parseFloat(document.getElementById('volume').value);
+  if (isNaN(deg)||isNaN(vol)||deg<=0||vol<=0) return;
+  drinks.push({ deg, vol, time: Date.now() });
+  renderLog();
+  update();
+}
+
+function removeDrink(i) {
+  drinks.splice(i,1);
+  renderLog();
+  update();
+}
+
+function clearAll() {
+  drinks = [];
+  renderLog();
+  update();
+}
+
+function renderLog() {
+  const sec = document.getElementById('logSection');
+  const list = document.getElementById('logList');
+  if (drinks.length === 0) {
+    sec.style.display = 'none';
+    return;
+  }
+  sec.style.display = 'block';
+  list.innerHTML = drinks.map((d,i) => {
+    const t = new Date(d.time);
+    const hm = t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0');
+    return `<div class="log-item">
+      <div>
+        <div class="log-info">${d.vol} mL à ${d.deg}%</div>
+        <div class="log-time">${hm}</div>
+      </div>
+      <button class="log-del" onclick="removeDrink(${i})" aria-label="Supprimer">×</button>
+    </div>`;
+  }).join('');
+}
+
+function calcBac() {
+  const weight = parseFloat(document.getElementById('weight').value)||75;
+  const height = parseFloat(document.getElementById('height').value)||175;
+  const r = sex==='H' ? 0.68 : 0.55;
+  const eliminate = 0.15;
+  const now = Date.now();
+
+  if (drinks.length===0) return { bac: 0, peak: 0 };
+
+  const firstTime = drinks[0].time;
+  let peakBac = 0;
+
+  let totalAlcohol = 0;
+  drinks.forEach(d => { totalAlcohol += (d.vol * d.deg/100 * 0.789); });
+  const rawPeak = totalAlcohol / (weight * r);
+  peakBac = rawPeak;
+
+  let bac = 0;
+  drinks.forEach(d => {
+    const hoursAgo = (now - d.time) / 3600000;
+    const alcG = d.vol * (d.deg/100) * 0.789;
+    const raw = alcG / (weight * r);
+    const val = Math.max(0, raw - eliminate * hoursAgo);
+    bac += val;
+  });
+
+  return { bac, peak: peakBac };
+}
+
+function timeToSober(currentBac, rate) {
+  if (currentBac <= 0) return null;
+  const hrs = currentBac / rate;
+  return hrs;
+}
+
+function fmtHours(h) {
+  if (h < 0.1) return '< 5 min';
+  const hh = Math.floor(h);
+  const mm = Math.round((h - hh) * 60);
+  if (hh === 0) return mm + ' min';
+  if (mm === 0) return hh + 'h';
+  return hh + 'h' + mm.toString().padStart(2,'0');
+}
+
+function update() {
+  const { bac, peak } = calcBac();
+  const eliminate = 0.15;
+
+  document.getElementById('bacDisplay').textContent = bac.toFixed(2);
+
+  const maxGauge = 2.0;
+  const pct = Math.min(bac / maxGauge, 1);
+  const deg = pct * 180;
+  let fillColor;
+  if (bac < 0.5) fillColor = '#1D9E75';
+  else if (bac < 0.8) fillColor = '#EF9F27';
+  else if (bac < 1.5) fillColor = '#D85A30';
+  else fillColor = '#A32D2D';
+
+  document.getElementById('gaugeFill').style.background =
+    `conic-gradient(from 180deg, ${fillColor} 0deg, ${fillColor} ${deg}deg, transparent ${deg}deg)`;
+
+  let label, bgC, txC;
+  if (bac < 0.1) { label='Sobre'; bgC='#EAF3DE'; txC='#3B6D11'; }
+  else if (bac < 0.5) { label='Légère'; bgC='#FAEEDA'; txC='#854F0B'; }
+  else if (bac < 0.8) { label='Modérée'; bgC='#FAC775'; txC='#633806'; }
+  else if (bac < 1.5) { label='Élevée'; bgC='#FAECE7'; txC='#993C1D'; }
+  else { label='Danger'; bgC='#FCEBEB'; txC='#A32D2D'; }
+  const badge = document.getElementById('statusBadge');
+  badge.textContent = label;
+  badge.style.background = bgC;
+  badge.style.color = txC;
+
+  document.getElementById('peakBac').textContent = peak > 0 ? peak.toFixed(2)+' g/L' : '—';
+
+  const h = timeToSober(bac, eliminate);
+  document.getElementById('soberIn').textContent = h !== null ? fmtHours(h) : '—';
+
+  const driveH = bac > 0.5 ? timeToSober(bac - 0.5, eliminate) : (bac > 0 ? 0 : null);
+  document.getElementById('driveIn').textContent = driveH !== null ? (driveH <= 0 ? 'Maintenant' : fmtHours(driveH)) : (bac <= 0.5 && bac > 0 ? 'Maintenant' : '—');
+}
+
+if (!tickInterval) {
+  tickInterval = setInterval(() => { if(drinks.length>0) update(); }, 60000);
+}
+
+update();
+</script>
