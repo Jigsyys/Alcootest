@@ -18,14 +18,11 @@
       --yellow: #f59e0b;
       --orange: #f97316;
       --red: #ef4444;
-      --darkred: #dc2626;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
+      background: var(--bg); color: var(--text); min-height: 100vh;
     }
     .app { max-width: 480px; margin: 0 auto; padding: 20px 16px 60px; }
 
@@ -39,22 +36,39 @@
     }
     .header p { font-size: 13px; color: var(--text2); margin-top: 4px; }
 
-    /* ── PARTICIPANT TABS ── */
-    .tabs-row { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; overflow-x: auto; padding-bottom: 2px; }
+    /* ── TABS ── */
+    .tabs-row {
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 18px; overflow-x: auto; padding-bottom: 2px;
+    }
     .tabs-row::-webkit-scrollbar { height: 0; }
     .p-tab {
-      flex-shrink: 0; padding: 7px 16px; border-radius: 50px;
+      flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px;
+      padding: 7px 10px 7px 14px; border-radius: 50px;
       border: 1px solid var(--border); background: var(--card);
       color: var(--text2); font-size: 13px; font-weight: 500; cursor: pointer;
       transition: all 0.2s; white-space: nowrap;
     }
     .p-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 4px 16px rgba(124,58,237,0.35); }
+    .p-tab-label { cursor: pointer; }
+    .p-tab.active .p-tab-label { cursor: text; }
+    .p-tab-rename {
+      background: transparent; border: none; outline: none;
+      color: #fff; font-size: 13px; font-weight: 500; width: 80px; padding: 0;
+    }
+    .p-tab-del {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+      font-size: 12px; line-height: 1; color: rgba(230,237,243,0.45);
+      cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .p-tab-del:hover { background: rgba(239,68,68,0.35); color: #ef4444; }
+    .p-tab.active .p-tab-del { color: rgba(255,255,255,0.55); }
     .add-p-btn {
       flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
       border: 1px dashed rgba(167,139,250,0.4); background: transparent;
       color: var(--accent2); font-size: 20px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s; line-height: 1;
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
     }
     .add-p-btn:hover { background: rgba(124,58,237,0.15); border-color: var(--accent); }
 
@@ -81,7 +95,7 @@
     .gauge-inner {
       position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
       width: 142px; height: 71px;
-      background: linear-gradient(to bottom, #161b22 0%, #0d1117 100%);
+      background: linear-gradient(to bottom, #161b22, #0d1117);
       border-radius: 0 0 71px 71px;
       display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 10px;
     }
@@ -117,7 +131,6 @@
     }
     .field input:focus { border-color: var(--accent); }
     .field input[type="time"] { color-scheme: dark; }
-    .field input[type="text"] { font-size: 15px; font-weight: 500; }
 
     /* ── QUICK DRINKS ── */
     .quick-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
@@ -144,10 +157,8 @@
     }
     .log-item:last-child { border-bottom: none; }
     .log-name { font-size: 14px; color: var(--text); font-weight: 500; }
-    .log-sub { font-size: 11px; color: var(--text2); margin-top: 2px; display: flex; align-items: center; gap: 6px; }
-    .log-status {
-      font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 50px;
-    }
+    .log-sub { font-size: 11px; color: var(--text2); margin-top: 2px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .log-status { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 50px; }
     .log-del {
       width: 28px; height: 28px; border-radius: 50%; border: none;
       background: rgba(255,255,255,0.05); color: var(--text2);
@@ -155,7 +166,9 @@
       display: flex; align-items: center; justify-content: center; transition: all 0.15s;
     }
     .log-del:hover { background: rgba(239,68,68,0.2); color: var(--red); }
-    .empty-log { text-align: center; padding: 10px 0; font-size: 13px; color: var(--text2); }
+
+    /* ── CHART ── */
+    #chartSection .card { padding: 12px 8px; }
 
     /* ── INFO ROW ── */
     .info-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
@@ -176,28 +189,22 @@
 
     /* ── LEADERBOARD ── */
     .lb-title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 16px; color: var(--text); }
-
     .podium { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-bottom: 20px; }
     .podium-item { flex: 1; max-width: 130px; text-align: center; }
     .pod-avatar {
       width: 46px; height: 46px; border-radius: 50%;
       background: rgba(255,255,255,0.08); border: 2px solid transparent;
       margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; font-size: 22px;
-      transition: box-shadow 0.4s;
     }
-    .podium-item.r1 .pod-avatar { border-color: #FFD700; box-shadow: 0 0 18px rgba(255,215,0,0.45); }
+    .podium-item.r1 .pod-avatar { border-color: #FFD700; box-shadow: 0 0 18px rgba(255,215,0,0.4); }
     .podium-item.r2 .pod-avatar { border-color: #C0C0C0; }
     .podium-item.r3 .pod-avatar { border-color: #CD7F32; }
-    .pod-name { font-size: 12px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pod-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .pod-bac { font-size: 13px; font-weight: 700; margin-top: 2px; }
-    .pod-block {
-      border-radius: 10px 10px 0 0; margin-top: 6px;
-      display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800;
-    }
+    .pod-block { border-radius: 10px 10px 0 0; margin-top: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; }
     .podium-item.r1 .pod-block { height: 80px; background: linear-gradient(160deg, #FFD700, #FFA500); color: rgba(0,0,0,0.35); }
     .podium-item.r2 .pod-block { height: 58px; background: linear-gradient(160deg, #d0d0d0, #a0a0a0); color: rgba(0,0,0,0.3); }
     .podium-item.r3 .pod-block { height: 42px; background: linear-gradient(160deg, #CD7F32, #8B5E1A); color: rgba(0,0,0,0.3); }
-
     .lb-list .lb-row {
       display: flex; align-items: center; gap: 10px;
       padding: 9px 0; border-bottom: 1px solid var(--border);
@@ -211,13 +218,9 @@
     .lb-bar-track { height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-top: 5px; }
     .lb-bar-fill { height: 5px; border-radius: 3px; transition: width 0.6s ease; }
     .lb-bac-val { font-size: 14px; font-weight: 700; width: 50px; text-align: right; flex-shrink: 0; }
-
     .lb-empty { text-align: center; padding: 20px; font-size: 13px; color: var(--text2); }
-
-    /* ── SEPARATOR ── */
     .sep { height: 1px; background: var(--border); margin: 6px 0 18px; }
 
-    /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
@@ -226,20 +229,16 @@
 <body>
 <div class="app">
 
-  <!-- HEADER -->
   <div class="header">
     <div class="header-emoji">🍷</div>
     <h1>Alcootest</h1>
     <p>Calculateur d'alcoolémie en temps réel</p>
   </div>
 
-  <!-- PARTICIPANT TABS -->
   <div class="tabs-row" id="tabsRow">
-    <!-- injected by JS -->
     <button class="add-p-btn" onclick="addParticipant()" title="Ajouter un participant">+</button>
   </div>
 
-  <!-- GAUGE -->
   <div class="gauge-wrap">
     <div class="gauge-outer">
       <div class="gauge-bg"></div>
@@ -256,7 +255,6 @@
     <span class="badge" id="statusBadge">✅ Sobre</span>
   </div>
 
-  <!-- PROFILE -->
   <div class="section-label">Profil</div>
   <div class="card">
     <div class="row2" style="margin-bottom:12px">
@@ -284,7 +282,6 @@
     </div>
   </div>
 
-  <!-- ADD DRINK -->
   <div class="section-label">Ajouter une boisson</div>
   <div class="card">
     <div class="quick-row">
@@ -311,13 +308,18 @@
     <button class="add-btn" onclick="addDrink()">+ Ajouter</button>
   </div>
 
-  <!-- LOG -->
   <div id="logSection" style="display:none">
     <div class="section-label">Consommations</div>
     <div class="card" id="logList"></div>
   </div>
 
-  <!-- INFO ROW -->
+  <div id="chartSection" style="display:none">
+    <div class="section-label">Courbe d'alcoolémie</div>
+    <div class="card" style="padding:12px 8px">
+      <svg id="bacChart" viewBox="0 0 360 180" style="width:100%;display:block"></svg>
+    </div>
+  </div>
+
   <div class="info-row">
     <div class="info-block">
       <div class="info-label">Pic estimé</div>
@@ -335,7 +337,6 @@
 
   <button class="clear-btn" onclick="clearAll()">🗑 Effacer les consommations</button>
 
-  <!-- LEADERBOARD -->
   <div class="sep"></div>
   <div class="card" id="lbCard">
     <div class="lb-title">🏆 Qui a le plus bu ?</div>
@@ -344,20 +345,24 @@
 
 </div>
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────
+// ── STATE ─────────────────────────────────────────────────────────────────
 const EMOJIS = ['🧑','👱','🧔','👩','🧒','🧑‍🦱','🧑‍🦰','🧑‍🦳'];
 let participants = [];
 let activeId = 0;
+let nextId = 0;
 let tick = null;
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function getActive() { return participants.find(p => p.id === activeId); }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 function init() {
   addParticipant(true);
-  resetTimeInput();
-  tick = setInterval(() => { resetTimeInput(); updateAll(); }, 60000);
+  syncTimeInput();
+  tick = setInterval(() => { syncTimeInput(); updateAll(); }, 60000);
 }
 
-function resetTimeInput() {
+function syncTimeInput() {
   const n = new Date();
   document.getElementById('drinkTime').value =
     n.getHours().toString().padStart(2,'0') + ':' + n.getMinutes().toString().padStart(2,'0');
@@ -367,22 +372,20 @@ function resetTimeInput() {
 function addParticipant(first) {
   if (!first) saveActive();
   const idx = participants.length;
+  const id = nextId++;
   participants.push({
-    id: idx,
-    name: idx === 0 ? 'Moi' : 'Joueur ' + (idx + 1),
-    sex: 'H',
-    weight: 75,
-    height: 175,
-    drinks: [],
-    emoji: EMOJIS[idx % EMOJIS.length]
+    id, name: idx === 0 ? 'Moi' : 'Joueur ' + (idx + 1),
+    sex: 'H', weight: 75, height: 175,
+    drinks: [], emoji: EMOJIS[idx % EMOJIS.length]
   });
-  activeId = idx;
+  activeId = id;
   renderTabs();
   loadActive();
   updateAll();
 }
 
 function switchTo(id) {
+  if (id === activeId) return;
   saveActive();
   activeId = id;
   renderTabs();
@@ -390,8 +393,18 @@ function switchTo(id) {
   updateAll();
 }
 
+function removeParticipant(id) {
+  if (participants.length <= 1) return;
+  const idx = participants.findIndex(p => p.id === id);
+  participants.splice(idx, 1);
+  if (activeId === id) activeId = participants[0].id;
+  renderTabs();
+  loadActive();
+  updateAll();
+}
+
 function saveActive() {
-  const p = participants[activeId];
+  const p = getActive();
   if (!p) return;
   p.name   = document.getElementById('pName').value.trim() || p.name;
   p.weight = parseFloat(document.getElementById('weight').value) || p.weight;
@@ -399,46 +412,111 @@ function saveActive() {
 }
 
 function loadActive() {
-  const p = participants[activeId];
+  const p = getActive();
   document.getElementById('pName').value  = p.name;
   document.getElementById('weight').value = p.weight;
   document.getElementById('height').value = p.height;
   document.getElementById('btnH').classList.toggle('active', p.sex === 'H');
   document.getElementById('btnF').classList.toggle('active', p.sex === 'F');
   renderLog(p);
+  renderChart(p);
 }
 
+// ── TABS ──────────────────────────────────────────────────────────────────
 function renderTabs() {
   const row = document.getElementById('tabsRow');
   const addBtn = row.querySelector('.add-p-btn');
-  // Remove old tabs
   [...row.querySelectorAll('.p-tab')].forEach(t => t.remove());
+
   participants.forEach(p => {
     const btn = document.createElement('button');
     btn.className = 'p-tab' + (p.id === activeId ? ' active' : '');
-    btn.textContent = p.emoji + ' ' + (p.name || 'Joueur');
-    btn.onclick = () => switchTo(p.id);
+    btn.dataset.pid = p.id;
+
+    const label = document.createElement('span');
+    label.className = 'p-tab-label';
+    label.textContent = p.emoji + ' ' + p.name;
+
+    if (p.id === activeId) {
+      // Click on label of active tab → start rename
+      label.onclick = (e) => { e.stopPropagation(); startTabRename(p.id); };
+    } else {
+      btn.onclick = () => switchTo(p.id);
+    }
+
+    btn.appendChild(label);
+
+    // Delete button (visible when 2+ participants)
+    if (participants.length > 1) {
+      const del = document.createElement('span');
+      del.className = 'p-tab-del';
+      del.textContent = '×';
+      del.title = 'Supprimer';
+      del.onclick = (e) => { e.stopPropagation(); removeParticipant(p.id); };
+      btn.appendChild(del);
+    }
+
     row.insertBefore(btn, addBtn);
   });
 }
 
-// ── EVENTS ────────────────────────────────────────────────────────────────
+function startTabRename(id) {
+  const p = participants.find(q => q.id === id);
+  if (!p) return;
+  const tab = document.querySelector(`.p-tab[data-pid="${id}"]`);
+  if (!tab) return;
+  const labelEl = tab.querySelector('.p-tab-label');
+  if (!labelEl) return;
+
+  const originalName = p.name;
+  const input = document.createElement('input');
+  input.className = 'p-tab-rename';
+  input.value = p.name;
+  input.style.width = Math.max(60, p.name.length * 8 + 16) + 'px';
+
+  labelEl.replaceWith(input);
+  input.focus();
+  input.select();
+
+  function commit() {
+    commitTabRename(id, input.value);
+  }
+  function cancel() {
+    commitTabRename(id, originalName);
+  }
+  input.onblur = commit;
+  input.onkeydown = (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    if (e.key === 'Escape') { input.onblur = null; cancel(); }
+  };
+}
+
+function commitTabRename(id, val) {
+  const p = participants.find(q => q.id === id);
+  if (!p) return;
+  p.name = val.trim() || p.name;
+  if (id === activeId) document.getElementById('pName').value = p.name;
+  renderTabs();
+  renderLeaderboard();
+}
+
+// ── PROFILE EVENTS ────────────────────────────────────────────────────────
 function setSex(s) {
-  participants[activeId].sex = s;
+  const p = getActive(); p.sex = s;
   document.getElementById('btnH').classList.toggle('active', s === 'H');
   document.getElementById('btnF').classList.toggle('active', s === 'F');
   updateAll();
 }
 
 function onNameInput() {
-  const p = participants[activeId];
+  const p = getActive();
   p.name = document.getElementById('pName').value.trim() || 'Joueur';
   renderTabs();
   renderLeaderboard();
 }
 
 function onProfileInput() {
-  const p = participants[activeId];
+  const p = getActive();
   p.weight = parseFloat(document.getElementById('weight').value) || 75;
   p.height = parseFloat(document.getElementById('height').value) || 175;
   updateAll();
@@ -451,7 +529,6 @@ function drinkTimestamp() {
   const [h, m] = val.split(':').map(Number);
   const d = new Date();
   d.setHours(h, m, 0, 0);
-  // If time is in the future, assume previous day
   if (d.getTime() > Date.now() + 60000) d.setDate(d.getDate() - 1);
   return d.getTime();
 }
@@ -460,7 +537,7 @@ function addDrink() {
   const deg = parseFloat(document.getElementById('degree').value);
   const vol = parseFloat(document.getElementById('volume').value);
   if (isNaN(deg) || isNaN(vol) || deg <= 0 || vol <= 0) return;
-  const p = participants[activeId];
+  const p = getActive();
   p.drinks.push({ deg, vol, time: drinkTimestamp() });
   p.drinks.sort((a, b) => a.time - b.time);
   renderLog(p);
@@ -474,27 +551,26 @@ function quickDrink(deg, vol) {
 }
 
 function removeDrink(pid, idx) {
-  participants[pid].drinks.splice(idx, 1);
-  if (pid === activeId) renderLog(participants[pid]);
+  const p = participants.find(q => q.id === pid);
+  if (p) p.drinks.splice(idx, 1);
+  if (pid === activeId) renderLog(getActive());
   updateAll();
 }
 
 function clearAll() {
-  participants[activeId].drinks = [];
-  renderLog(participants[activeId]);
-  updateAll();
+  const p = getActive(); p.drinks = [];
+  renderLog(p); updateAll();
 }
 
-// ── RENDER LOG ────────────────────────────────────────────────────────────
+// ── LOG ───────────────────────────────────────────────────────────────────
 function drinkStatus(d) {
   const h = (Date.now() - d.time) / 3600000;
   if (h < 0) return ['⏳ Future', '#6366f1'];
   if (h < 0.5) return ['🔺 Absorption', '#f59e0b'];
-  const p = participants[activeId];
+  const p = getActive();
   const r = p.sex === 'H' ? 0.68 : 0.55;
-  const c = (d.vol * d.deg / 100 * 0.789) / (p.weight * r);
-  const rem = c - 0.15 * (h - 0.5);
-  if (rem <= 0) return ['✅ Éliminée', '#10b981'];
+  const contrib = (d.vol * d.deg / 100 * 0.789) / (p.weight * r) - 0.15 * (h - 0.5);
+  if (contrib <= 0) return ['✅ Éliminée', '#10b981'];
   return ['📉 Élimination', '#a78bfa'];
 }
 
@@ -522,8 +598,8 @@ function renderLog(p) {
   }).join('');
 }
 
-// ── BAC FORMULA (Widmark + 30 min absorption) ─────────────────────────────
-// Each drink: rises linearly during first 30 min, then eliminated at 0.15 g/L/h
+// ── BAC FORMULA — Widmark + 30 min absorption ─────────────────────────────
+// Chaque boisson s'absorbe linéairement en 30 min, puis s'élimine à 0.15 g/L/h
 function bacAtTime(p, ms) {
   const r = p.sex === 'H' ? 0.68 : 0.55;
   return p.drinks.reduce((sum, d) => {
@@ -534,43 +610,55 @@ function bacAtTime(p, ms) {
   }, 0);
 }
 
-function calcBac(p) {
-  return bacAtTime(p, Date.now());
-}
+function calcBac(p) { return bacAtTime(p, Date.now()); }
 
-// Find peak and compute timings
+// Calcul du pic et des timings par simulation (pas de formule analytique incorrecte)
 function calcTimings(p) {
-  if (!p.drinks.length) return { peak: 0, soberIn: null, driveIn: null };
+  if (!p.drinks.length) return { peak: 0, soberIn: null, driveIn: null, soberMs: null };
   const now = Date.now();
+
+  // Étape 1 : trouver le pic par simulation (scan toutes les 2 min, 12h max)
   let peak = bacAtTime(p, now);
   let peakMs = now;
-  // Scan next 12h in 2-min steps
   for (let m = 2; m <= 720; m += 2) {
     const t = now + m * 60000;
     const b = bacAtTime(p, t);
     if (b > peak) { peak = b; peakMs = t; }
     else if (b < 0.001 && peak > 0.001) break;
   }
-  if (peak < 0.001) return { peak: 0, soberIn: null, driveIn: null };
 
-  const soberMs  = peakMs + (peak / 0.15) * 3600000;
-  const soberIn  = (soberMs - now) / 3600000;
+  if (peak < 0.001) return { peak: 0, soberIn: null, driveIn: null, soberMs: null };
 
-  let driveIn;
-  if (peak <= 0.5) {
-    driveIn = 0;
-  } else {
-    const driveMs = peakMs + ((peak - 0.5) / 0.15) * 3600000;
+  // Étape 2 : simuler en avant depuis le pic pour trouver l'heure réelle de sobriété
+  // (ne pas utiliser peak/0.15 : chaque boisson s'élimine indépendamment → descente plus rapide)
+  let soberMs = peakMs;
+  for (let m = 2; m <= 1440; m += 2) {
+    const t = peakMs + m * 60000;
+    soberMs = t;
+    if (bacAtTime(p, t) < 0.001) break;
+  }
+  const soberIn = (soberMs - now) / 3600000;
+
+  // Étape 3 : trouver l'heure où BAC passe sous 0.5 g/L (seuil conduite)
+  let driveIn = 0;
+  if (peak > 0.5) {
+    let driveMs = peakMs;
+    for (let m = 0; m <= 1440; m += 2) {
+      const t = peakMs + m * 60000;
+      driveMs = t;
+      if (bacAtTime(p, t) <= 0.5) break;
+    }
     driveIn = Math.max(0, (driveMs - now) / 3600000);
   }
-  return { peak, soberIn, driveIn };
+
+  return { peak, soberIn, driveIn, soberMs };
 }
 
-// ── COLORS ────────────────────────────────────────────────────────────────
+// ── COULEURS ──────────────────────────────────────────────────────────────
 function bacColor(bac) {
-  if (bac < 0.5)  return '#10b981';
-  if (bac < 0.8)  return '#f59e0b';
-  if (bac < 1.5)  return '#f97316';
+  if (bac < 0.5) return '#10b981';
+  if (bac < 0.8) return '#f59e0b';
+  if (bac < 1.5) return '#f97316';
   return '#ef4444';
 }
 
@@ -585,33 +673,28 @@ function fmtH(h) {
 
 // ── UPDATE ACTIVE ─────────────────────────────────────────────────────────
 function updateActive() {
-  const p = participants[activeId];
-  if (!p) return;
+  const p = getActive(); if (!p) return;
   const bac = calcBac(p);
   const { peak, soberIn, driveIn } = calcTimings(p);
 
-  // Gauge
   document.getElementById('bacDisplay').textContent = bac.toFixed(2);
   document.getElementById('gaugeEmoji').textContent = p.emoji;
+
   const col = bacColor(bac);
   const pct = Math.min(bac / 2.0, 1);
   document.getElementById('gaugeFill').style.background =
     `conic-gradient(from 180deg, ${col} 0deg, ${col} ${pct*180}deg, transparent ${pct*180}deg)`;
 
-  // Badge
   let label, bg, fg;
-  if (bac < 0.1)       { label='✅ Sobre';    bg='rgba(16,185,129,0.12)'; fg='#10b981'; }
-  else if (bac < 0.5)  { label='🟡 Légère';   bg='rgba(245,158,11,0.12)'; fg='#f59e0b'; }
-  else if (bac < 0.8)  { label='🟠 Modérée';  bg='rgba(249,115,22,0.12)'; fg='#f97316'; }
-  else if (bac < 1.5)  { label='🔴 Élevée';   bg='rgba(239,68,68,0.12)';  fg='#ef4444'; }
-  else                 { label='⚠️ Danger';   bg='rgba(220,38,38,0.15)';  fg='#dc2626'; }
+  if (bac < 0.1)      { label='✅ Sobre';   bg='rgba(16,185,129,0.12)'; fg='#10b981'; }
+  else if (bac < 0.5) { label='🟡 Légère';  bg='rgba(245,158,11,0.12)'; fg='#f59e0b'; }
+  else if (bac < 0.8) { label='🟠 Modérée'; bg='rgba(249,115,22,0.12)'; fg='#f97316'; }
+  else if (bac < 1.5) { label='🔴 Élevée';  bg='rgba(239,68,68,0.12)';  fg='#ef4444'; }
+  else                { label='⚠️ Danger';  bg='rgba(220,38,38,0.15)';  fg='#dc2626'; }
   const badge = document.getElementById('statusBadge');
   badge.textContent = label;
-  badge.style.background = bg;
-  badge.style.color = fg;
-  badge.style.borderColor = fg + '50';
+  badge.style.background = bg; badge.style.color = fg; badge.style.borderColor = fg + '50';
 
-  // Info row
   document.getElementById('peakBac').textContent = peak > 0 ? peak.toFixed(2) + ' g/L' : '—';
   document.getElementById('soberIn').textContent  = soberIn !== null ? fmtH(soberIn) : '—';
   if (driveIn === null) {
@@ -622,15 +705,126 @@ function updateActive() {
     document.getElementById('driveIn').textContent = fmtH(driveIn);
   }
 
-  // Refresh log statuses (absorption states change over time)
   renderLog(p);
+}
+
+// ── GRAPHIQUE SVG ─────────────────────────────────────────────────────────
+function renderChart(p) {
+  const sec = document.getElementById('chartSection');
+  if (!p || !p.drinks.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+
+  const svg = document.getElementById('bacChart');
+  const W = 360, H = 180;
+  const PL = 36, PR = 12, PT = 14, PB = 30;
+  const CW = W - PL - PR;   // largeur zone de dessin
+  const CH = H - PT - PB;   // hauteur zone de dessin
+
+  const now = Date.now();
+  const { soberMs } = calcTimings(p);
+  const tStart = Math.min(...p.drinks.map(d => d.time)) - 30 * 60000;
+  const tEnd   = Math.max(soberMs || now + 2 * 3600000, now + 2 * 3600000);
+
+  // Trouver le BAC max sur la plage
+  let maxBac = 0.8;
+  for (let t = tStart; t <= tEnd; t += 5 * 60000) maxBac = Math.max(maxBac, bacAtTime(p, t));
+  maxBac = maxBac * 1.15;
+
+  function xS(ms)  { return PL + (ms - tStart) / (tEnd - tStart) * CW; }
+  function yS(bac) { return PT + CH - Math.min(bac / maxBac, 1) * CH; }
+
+  let out = '';
+
+  // ── Zones colorées ──
+  const y05 = yS(0.5), y08 = yS(0.8), y0 = yS(0), yTop = PT;
+  out += `<rect x="${PL}" y="${y0}" width="${CW}" height="${yS(0) - yS(0) + 1}" fill="none"/>`;
+  // vert : 0 → 0.5
+  out += `<rect x="${PL}" y="${y05}" width="${CW}" height="${y0 - y05}" fill="rgba(16,185,129,0.07)"/>`;
+  // orange : 0.5 → 0.8
+  if (maxBac > 0.5) {
+    const topOrange = Math.min(y08, yTop);
+    out += `<rect x="${PL}" y="${topOrange}" width="${CW}" height="${y05 - topOrange}" fill="rgba(249,115,22,0.08)"/>`;
+  }
+  // rouge : 0.8 → max
+  if (maxBac > 0.8) {
+    out += `<rect x="${PL}" y="${yTop}" width="${CW}" height="${y08 - yTop}" fill="rgba(239,68,68,0.08)"/>`;
+  }
+
+  // ── Grille et axes ──
+  // Ligne base (axe X)
+  out += `<line x1="${PL}" y1="${y0}" x2="${W-PR}" y2="${y0}" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>`;
+
+  // Labels Y et lignes horizontales
+  const yLabels = [0, 0.5, 1.0];
+  if (maxBac > 1.2) yLabels.push(Math.floor(maxBac * 10) / 10);
+  yLabels.forEach(v => {
+    if (v > maxBac) return;
+    const y = yS(v);
+    out += `<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+    out += `<text x="${PL-4}" y="${y+3.5}" text-anchor="end" fill="rgba(230,237,243,0.45)" font-size="8" font-family="system-ui">${v.toFixed(1)}</text>`;
+  });
+
+  // Labels X (heures)
+  const spanH = (tEnd - tStart) / 3600000;
+  const stepH = spanH <= 4 ? 1 : spanH <= 8 ? 2 : spanH <= 16 ? 3 : 4;
+  const firstHour = new Date(tStart);
+  firstHour.setMinutes(0, 0, 0);
+  firstHour.setTime(firstHour.getTime() + 3600000); // arrondi à l'heure suivante
+  for (let t = firstHour.getTime(); t <= tEnd; t += stepH * 3600000) {
+    const x = xS(t);
+    if (x < PL + 10 || x > W - PR - 10) continue;
+    const d = new Date(t);
+    const lbl = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+    out += `<line x1="${x}" y1="${y0}" x2="${x}" y2="${y0+4}" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>`;
+    out += `<text x="${x}" y="${H-PB+14}" text-anchor="middle" fill="rgba(230,237,243,0.45)" font-size="8" font-family="system-ui">${lbl}</text>`;
+  }
+
+  // ── Courbe BAC ──
+  const pts = [];
+  for (let t = tStart; t <= tEnd; t += 3 * 60000) {
+    pts.push(`${xS(t).toFixed(1)},${yS(bacAtTime(p, t)).toFixed(1)}`);
+  }
+  // Zone de remplissage sous la courbe
+  const fillPts = `${xS(tStart)},${y0} ` + pts.join(' ') + ` ${xS(tEnd)},${y0}`;
+  out += `<polygon points="${fillPts}" fill="rgba(167,139,250,0.08)"/>`;
+  // Ligne de la courbe
+  out += `<polyline points="${pts.join(' ')}" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+
+  // ── Ligne "Maintenant" ──
+  const xNow = xS(now);
+  if (xNow >= PL && xNow <= W - PR) {
+    out += `<line x1="${xNow}" y1="${PT}" x2="${xNow}" y2="${y0}" stroke="rgba(230,237,243,0.35)" stroke-width="1" stroke-dasharray="3,3"/>`;
+    out += `<text x="${xNow+3}" y="${PT+9}" fill="rgba(230,237,243,0.45)" font-size="8" font-family="system-ui">now</text>`;
+  }
+
+  // ── Ligne seuil conduite 0.5 ──
+  if (maxBac > 0.4) {
+    const y = yS(0.5);
+    out += `<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="rgba(249,115,22,0.55)" stroke-width="1" stroke-dasharray="4,3"/>`;
+    out += `<text x="${W-PR-2}" y="${y-3}" text-anchor="end" fill="rgba(249,115,22,0.65)" font-size="8" font-family="system-ui">Conduite</text>`;
+  }
+
+  // ── Marqueurs boissons (triangles sur l'axe X) ──
+  p.drinks.forEach(d => {
+    const x = xS(d.time);
+    if (x < PL || x > W - PR) return;
+    const bac = bacAtTime(p, d.time); // BAC au moment du verre (absorption non encore commencée)
+    const col = bacColor(bacAtTime(p, d.time + 30 * 60000)); // couleur au pic de ce verre
+    const sz = 5;
+    // Triangle pointant vers le bas (sur la barre des heures)
+    out += `<polygon points="${x},${y0} ${x-sz},${y0+sz*1.6} ${x+sz},${y0+sz*1.6}" fill="${col}" opacity="0.85"/>`;
+    // Ligne verticale légère depuis le triangle jusqu'à la courbe
+    out += `<line x1="${x}" y1="${y0}" x2="${x}" y2="${PT}" stroke="${col}" stroke-width="0.5" opacity="0.2"/>`;
+  });
+
+  svg.innerHTML = out;
 }
 
 // ── LEADERBOARD ───────────────────────────────────────────────────────────
 function renderLeaderboard() {
   const el = document.getElementById('lbContent');
   if (participants.length < 2) {
-    el.innerHTML = '<div class="lb-empty">Ajoutez un participant avec le bouton <b>+</b> pour comparer</div>';
+    el.innerHTML = '<div class="lb-empty">Ajoutez un participant avec <b>+</b> pour comparer</div>';
     return;
   }
 
@@ -643,15 +837,14 @@ function renderLeaderboard() {
   const maxBac = Math.max(...data.map(d => d.bac), 0.01);
   let html = '';
 
-  // Podium (3+ participants)
   if (data.length >= 3) {
     const order = [data[1], data[0], data[2]];
-    const rClasses = ['r2', 'r1', 'r3'];
-    const medals = ['🥈', '🥇', '🥉'];
+    const rCls  = ['r2', 'r1', 'r3'];
+    const medals = ['🥈','🥇','🥉'];
     html += '<div class="podium">';
     order.forEach((item, i) => {
       const c = bacColor(item.bac);
-      html += `<div class="podium-item ${rClasses[i]}">
+      html += `<div class="podium-item ${rCls[i]}">
         <div class="pod-avatar">${item.p.emoji}</div>
         <div class="pod-name">${item.p.name}</div>
         <div class="pod-bac" style="color:${c}">${item.bac.toFixed(2)} g/L</div>
@@ -661,14 +854,13 @@ function renderLeaderboard() {
     html += '</div>';
   }
 
-  // Bar list
   html += '<div class="lb-list">';
   data.forEach((item, idx) => {
-    const rank  = idx + 1;
-    const icon  = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank + '.';
-    const bar   = maxBac > 0 ? (item.bac / maxBac) * 100 : 0;
-    const col   = bacColor(item.bac);
-    const isMe  = item.p.id === activeId;
+    const rank = idx + 1;
+    const icon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank + '.';
+    const bar  = (item.bac / maxBac) * 100;
+    const col  = bacColor(item.bac);
+    const isMe = item.p.id === activeId;
     html += `<div class="lb-row" style="${isMe ? 'background:rgba(124,58,237,0.07);border-radius:10px;padding:9px 6px;' : ''}">
       <div class="lb-rank">${icon}</div>
       <div class="lb-av">${item.p.emoji}</div>
@@ -685,7 +877,6 @@ function renderLeaderboard() {
   if (data.every(d => d.bac < 0.005 && d.totalG < 0.01)) {
     html = '<div class="lb-empty">Personne n\'a encore bu 🙂</div>';
   }
-
   el.innerHTML = html;
 }
 
@@ -693,6 +884,7 @@ function renderLeaderboard() {
 function updateAll() {
   updateActive();
   renderLeaderboard();
+  renderChart(getActive());
 }
 
 init();
